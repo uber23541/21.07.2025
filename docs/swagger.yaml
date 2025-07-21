@@ -1,0 +1,100 @@
+basePath: /
+definitions:
+  handlers.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.Task:
+    properties:
+      errors:
+        items:
+          type: string
+        type: array
+      files:
+        items:
+          type: string
+        type: array
+      id:
+        type: string
+      status:
+        type: string
+      zip_path:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Create ZIP archives from public URLs.
+  title: Archive Service API
+  version: "1.0"
+paths:
+  /tasks/add:
+    post:
+      parameters:
+      - description: Task ID
+        in: query
+        name: task_id
+        required: true
+        type: string
+      - description: File URL
+        in: query
+        name: url
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Task'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Add file URL to a task
+      tags:
+      - tasks
+  /tasks/create:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Task'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Create a new task
+      tags:
+      - tasks
+  /tasks/status:
+    get:
+      parameters:
+      - description: Task ID
+        in: query
+        name: task_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Task'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get task status
+      tags:
+      - tasks
+swagger: "2.0"
